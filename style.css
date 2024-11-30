@@ -1,0 +1,125 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f2ead5;
+  }
+  
+  .container {
+    padding: 20px;
+    text-align: center;
+    color: #333;
+  }
+
+  .logo {
+    width: 50%; /* Reduce width */
+    height: 20px; /* Reduce height */
+    background-color: transparent; /* Use 'transparent' instead of 'none' for proper CSS syntax */
+    /* border-radius: 50%; Uncomment if you want a circular shape */
+    /* margin-bottom: 10px; Uncomment and adjust if spacing is needed */
+}
+
+.logo img {
+    width: 200px; /* Adjust as needed */
+    height: auto; /* Maintain aspect ratio */
+    object-fit: contain; /* Maintain aspect ratio */
+    padding: 10px; 
+}
+  
+  .controls {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .button {
+    
+    padding: 10px 20px;
+    border: none;
+    background-color: #07ad84;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .button:hover {
+    background-color: #056950;
+  }
+  
+  .color-picker {
+    width: 50px;
+    height: 30px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .dropdown {
+    padding: 5px;
+  }
+  
+  /* .canvas {
+    width: 60%;
+    height: 600px;
+    background-color: white;
+    border: 2px solid #ccc;
+    position: relative;
+    overflow: hidden;
+  }
+   */
+   .canvas {
+    width:30%;
+    height: 600px;
+    aspect-ratio: 9/16; 
+    background-color: white;
+    border: 2px solid #ccc;
+    position: relative;
+    overflow: hidden;
+    margin: 0 auto; 
+    display: block; // Ensures it behaves like a block element 
+  }
+
+  /* Swiper styles */
+.swiper-container {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .swiper-wrapper {
+    display: flex;
+  }
+  
+  .swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Canvas with 9:16 ratio */
+  /* .canvas {
+    width: 30%;
+    aspect-ratio: 9 / 16;
+    background-color: white;
+    border: 2px solid #ccc;
+    overflow: hidden;
+    position: relative;
+  } */
+  
+
+  .text-element {
+    position: absolute;
+    cursor: move;
+    user-select: none;
+    padding: 5px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .text-element.editing input {
+    border: 1px solid #007bff;
+    padding: 2px;
+    font-size: inherit;
+    font-family: inherit;
+  }
+  
