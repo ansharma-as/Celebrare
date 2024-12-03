@@ -20,22 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
             canvas3: { elements: [], undoStack: [], redoStack: [], selectedElement: null },
         
     };
-    const addNewCanvas = () => {
-        const newCanvasId = `canvas${Object.keys(canvasStates).length + 1}`;
-        canvasStates[newCanvasId] = { elements: [], undoStack: [], redoStack: [], selectedElement: null };
     
-        // Create and add a new Swiper slide
-        const newSlide = document.createElement("div");
-        newSlide.className = "swiper-slide";
-        const canvas = document.createElement("div");
-        canvas.id = newCanvasId;
-        canvas.className = "canvas";
-        newSlide.appendChild(canvas);
-        document.querySelector(".swiper-wrapper").appendChild(newSlide);
-    
-        swiper.update();
-        updatePagePreviews();
-    };
 
     let activeCanvasId = "canvas1";
 
@@ -55,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const renderElements = () => {
         const canvas = document.getElementById(activeCanvasId);
         const { elements } = getActiveCanvasState();
-        canvas.innerHTML = ""; // Clear the canvas
+        canvas.innerHTML = ""; 
     
         elements.forEach((el) => {
             if (el.type === "text") {
@@ -77,10 +62,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
                 
-                // Append the textDiv to the canvas
                 canvas.appendChild(textDiv);
     
-                // Double-click to edit
                 addTextEditListener(textDiv, el, canvas);
                 textDiv.addEventListener("pointerdown", (e) => startDragging(e, el))
                
@@ -98,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 img.src = el.src;
                 img.style.width = "100%";
                 img.style.height = "100%";
-                img.draggable = false; // Prevent default drag behavior
+                img.draggable = false; 
     
                 const resizeHandle = document.createElement("div");
                 resizeHandle.style.position = "absolute";
@@ -179,7 +162,6 @@ document.addEventListener("DOMContentLoaded", () => {
             let newWidth = initialWidth + (e.clientX - initialX);
             let newHeight = initialHeight + (e.clientY - initialY);
     
-            // Ensure the image stays within canvas bounds
             newWidth = Math.max(20, Math.min(canvasRect.width - element.x, newWidth));
             newHeight = Math.max(20, Math.min(canvasRect.height - element.y, newHeight));
     
@@ -192,7 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const stopResizing = () => {
             document.removeEventListener("pointermove", onPointerMove);
             document.removeEventListener("pointerup", stopResizing);
-            saveState(); // Save the final size
+            saveState(); 
         };
     
         document.addEventListener("pointermove", onPointerMove);
@@ -219,21 +201,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const canvasElement = document.getElementById(activeCanvasId);
         const { elements } = getActiveCanvasState();
     
-        // Create a jsPDF instance
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF();
     
-        // PDF settings
         const pageWidth = pdf.internal.pageSize.getWidth();
         const pageHeight = pdf.internal.pageSize.getHeight();
     
-        // Create a temporary canvas to render elements
         const tempCanvas = document.createElement("canvas");
         tempCanvas.width = canvasElement.offsetWidth;
         tempCanvas.height = canvasElement.offsetHeight;
         const tempContext = tempCanvas.getContext("2d");
     
-        // Render each element onto the temp canvas
         elements.forEach((el) => {
             if (el.type === "text") {
                 tempContext.font = `${el.boldButton || "normal"} ${el.fontSize}px Arial`;
@@ -248,22 +226,17 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     
-        // Wait a short time to ensure all images are rendered
         setTimeout(() => {
-            // Convert the canvas to an image data URL
             const imgData = tempCanvas.toDataURL("image/png");
     
-            // Add the canvas image to the PDF
             pdf.addImage(imgData, "PNG", 0, 0, pageWidth, pageHeight);
     
-            // Save the PDF
             pdf.save(`${activeCanvasId}.pdf`);
         }, 500);
     });
     
     
 
-    // Undo and redo functionality
     const undoButton = document.getElementById("undo");
     const redoButton = document.getElementById("redo");
 
@@ -285,7 +258,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   
-    // Styling functionality
     const boldButton = document.getElementById("bold");
     const underlineButton = document.getElementById("underline");
     const uppercaseButton = document.getElementById("uppercase");
@@ -297,8 +269,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const state = getActiveCanvasState();
     if (state.selectedElement) {
         saveState();
-        state.selectedElement.boldButton = !state.selectedElement.boldButton; // Toggle boldButton
-        renderElements(); // Re-render elements to reflect the change
+        state.selectedElement.boldButton = !state.selectedElement.boldButton; 
+        renderElements();
     }
 });
     
@@ -351,7 +323,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 
-    // Insert image functionality
     const insertImageButton = document.getElementById("insertImage");
     insertImageButton.addEventListener("click", () => {
         const fileInput = document.createElement("input");
@@ -397,7 +368,6 @@ document.addEventListener("DOMContentLoaded", () => {
             let newX = e.clientX - offsetX;
             let newY = e.clientY - offsetY;
     
-            // Ensure the element stays within canvas bounds
             newX = Math.max(0, Math.min(canvasRect.width - (element.width || 50), newX));
             newY = Math.max(0, Math.min(canvasRect.height - (element.height || 30), newY));
     
@@ -410,7 +380,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const stopDragging = () => {
             document.removeEventListener("pointermove", onPointerMove);
             document.removeEventListener("pointerup", stopDragging);
-            saveState(); // Save the final position
+            saveState(); 
         };
     
         document.addEventListener("pointermove", onPointerMove);
@@ -482,11 +452,10 @@ const populatePageList = () => {
   
         if (draggedIndex !== targetIndex) {
           reorderPages(draggedIndex, targetIndex);
-          populatePageList(); // Re-render the list
+          populatePageList(); 
         }
       });
   
-      // Add Delete Button
       const deleteButton = document.createElement("button");
       deleteButton.classList.add("delete-button");
       deleteButton.textContent = "Delete";
@@ -498,12 +467,11 @@ const populatePageList = () => {
       pageListContainer.appendChild(pageItem);
     });
 
-    //updating the sidebar
     updateSidebar();
+    saveState();
 
   };
   
-  // Function to get the element after which the dragged item should be placed
   const getDragAfterElement = (container, y) => {
     const draggableElements = [...container.querySelectorAll(".page-item:not(.dragging)")];
   
@@ -518,7 +486,6 @@ const populatePageList = () => {
     }, { offset: Number.NEGATIVE_INFINITY }).element;
   };
   
-  // Function to reorder Swiper slides and canvasStates based on drag-and-drop
   const reorderPages = (fromIndex, toIndex) => {
     const slides = Array.from(swiper.slides);
     const [movedSlide] = slides.splice(fromIndex, 1);
@@ -538,21 +505,20 @@ const populatePageList = () => {
   
     Object.assign(canvasStates, reorderedCanvasStates);
   
+    populatePageList();
     updateCanvasIds();
     updateActiveCanvas();
     renderElements();
+    updateSidebar();
   };
   
-  // Function to delete a page
   const deletePage = (index) => {
     swiper.removeSlide(index);
   
-    // Remove the corresponding canvas state
     const canvasKeys = Object.keys(canvasStates);
     const deletedKey = canvasKeys[index];
     delete canvasStates[deletedKey];
   
-    // Reorder canvasStates to maintain consistency
     const reorderedCanvasStates = {};
     Object.keys(canvasStates).forEach((key, i) => {
       reorderedCanvasStates[`canvas${i + 1}`] = canvasStates[key];
@@ -560,7 +526,6 @@ const populatePageList = () => {
   
     Object.assign(canvasStates, reorderedCanvasStates);
   
-    // Re-render the page list
     populatePageList();
     updateCanvasIds();
     updateActiveCanvas();
@@ -569,7 +534,6 @@ const populatePageList = () => {
 
   };
   
-  // Function to update canvas IDs to maintain proper order
   const updateCanvasIds = () => {
     Object.keys(canvasStates).forEach((key, index) => {
       const canvas = document.getElementById(key);
@@ -590,16 +554,14 @@ addPageButton.addEventListener('click', () => {
     newPageElement.innerHTML = `<div class="canvas" id="canvas${newPageIndex + 1}"></div>`;
     swiper.appendSlide(newPageElement);
     
-    // Initialize the canvas state for the new page
+    
     canvasStates[`canvas${newPageIndex + 1}`] = { elements: [], undoStack: [], redoStack: [], selectedElement: null };
     
-    // Render the elements for the new page
     updateActiveCanvas();
     renderElements();
   
-    // Populate the page list and update sidebar
     populatePageList();
-    updateSidebar(); // Add this line
+    updateSidebar(); 
   });
   
   function deletePageAtIndex(index) {
@@ -608,17 +570,15 @@ addPageButton.addEventListener('click', () => {
     populatePageList();
     updateActiveCanvas();
     renderElements();
-    updateSidebar(); // Add this line
+    updateSidebar();
   }
 
 
-// Save changes
 const saveChangesButton = document.getElementById('saveChanges');
 const cancelChangesButton = document.getElementById('cancelChanges');
 
 saveChangesButton.addEventListener('click', () => {
   pageEditingModal.style.display = 'none';
-  // Save the current state of the canvases
   for (const [key, value] of Object.entries(canvasStates)) {
     localStorage.setItem(`${key}_elements`, JSON.stringify(value.elements));
     localStorage.setItem(`${key}_undoStack`, JSON.stringify(value.undoStack));
@@ -627,31 +587,25 @@ saveChangesButton.addEventListener('click', () => {
 });
 
 
-// Store initial state of slides
 let initialSlideCount = swiper.slides.length;
 
-// Function to update the initial state when needed
 function updateInitialState() {
 initialSlideCount = swiper.slides.length;
 }
 
-// Modify the cancel logic to handle added pages
 cancelChangesButton.addEventListener("click", () => {
   pageEditingModal.style.display = "none";
 
-  // Restore the previous state of the canvases
   for (const [key, value] of Object.entries(canvasStates)) {
     value.elements = JSON.parse(localStorage.getItem(`${key}_elements`) || "[]");
     value.undoStack = JSON.parse(localStorage.getItem(`${key}_undoStack`) || "[]");
     value.redoStack = JSON.parse(localStorage.getItem(`${key}_redoStack`) || "[]");
   }
 
-  // Remove the additional pages added during the editing session
   while (swiper.slides.length > initialSlideCount) {
-    swiper.removeSlide(swiper.slides.length - 1); // Remove from the end
+    swiper.removeSlide(swiper.slides.length - 1);
   }
 
-  // Re-populate the page list and update active canvas
   populatePageList();
   updateActiveCanvas();
   renderElements();
@@ -704,7 +658,6 @@ function updateSidebar() {
             return container;
         })();
 
-    // Clear existing previews
     pagePreviewContainer.innerHTML = '';
 
     // Create preview for each slide
@@ -713,7 +666,6 @@ function updateSidebar() {
         preview.classList.add('page-preview');
         preview.dataset.index = i;
 
-        // Create a canvas to generate preview image
         const canvas = document.getElementById(`canvas${i + 1}`);
         const previewImg = document.createElement('img');
         previewImg.alt = `Canvas ${i + 1} Preview`;
@@ -727,17 +679,14 @@ function updateSidebar() {
         preview.addEventListener('click', () => {
             swiper.slideTo(i);
             
-            // Remove active class from all previews
             sidebar.querySelectorAll('.page-preview').forEach(el => el.classList.remove('active'));
             
-            // Add active class to clicked preview
             preview.classList.add('active');
         });
         
         pagePreviewContainer.appendChild(preview);
     }
     
-    // Set first preview as active if slides exist
     if (swiper.slides.length > 0) {
         const firstPreview = pagePreviewContainer.querySelector('.page-preview');
         if (firstPreview) firstPreview.classList.add('active');
@@ -746,10 +695,8 @@ function updateSidebar() {
 
 
 
-// Automatically mark first preview as active initially
 pagePreviewElements[0].classList.add('active');
 
-// Sync active preview with Swiper's current slide
 swiper.on('slideChange', function () {
     document.querySelectorAll('.page-preview').forEach(el => el.classList.remove('active'));
     const activePreview = document.querySelector(`.page-preview[data-index="${swiper.activeIndex}"]`);
